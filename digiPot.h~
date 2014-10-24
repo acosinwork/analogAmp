@@ -1,3 +1,4 @@
+#include <Arduino.h>
 // У нас 7-битные потенциометры
 #define D_POT_BITS    7
 
@@ -14,17 +15,30 @@
 #define HIGH_LEFT     4
 #define HIGH_RIGHT    5
 
-void digiPotInit(byte vol, byte low, byte high)
-{
-  pinMode(D_POT_MOSI, OUTPUT);
-  pinMode(D_POT_SCK, OUTPUT);
-  pinMode(D_POT_CS, OUTPUT);
-
-  setAllVolumes(vol, low, high);
-}
-
 // Здесь храятся все настройки громкостей 
 byte dPotValues[D_POT_COUNT];
+
+// Шлём данные одного потенциометра
+void sendPotData(byte data)
+{
+  digitalWrite(D_POT_SCK, LOW);
+
+  for (int i = 0; i < D_POT_BITS; ++i) 
+    digitalWrite(D_POT_MOSI, bitRead(data, i));
+
+  digitalWrite(D_POT_SCK, HIGH);
+}
+
+// Обновляем показания всех потенциометров
+void dPotUpdate()
+{
+  digitalWrite(D_POT_CS, LOW);
+  
+  for (int i = 0; i < D_POT_COUNT; ++i)
+    sendPotData(dPotValues[i]);
+  
+  digitalWrite(D_POT_CS, HIGH);
+}
 
 // Устанавлиаем громкость
 void setVolume(byte value)
@@ -63,25 +77,14 @@ void setAllVolumes(byte vol, byte low, byte high)
   dPotUpdate();
 }
 
-// Шлём данные одного потенциометра
-void sendPotData(byte data)
+// Это нужнобудет вызать в setup() 
+// и передать сюда значения с потенциометров-крутилок
+void digiPotInit(byte vol, byte low, byte high)
 {
-  digitalWrite(D_POT_SCK, LOW);
+  pinMode(D_POT_MOSI, OUTPUT);
+  pinMode(D_POT_SCK, OUTPUT);
+  pinMode(D_POT_CS, OUTPUT);
 
-  for (int i = 0; i < D_POT_BITS; ++i) 
-    digitalWrite(D_POT_MOSI, bitRead(data, i));
-
-  digitalWrite(D_POT_SCK, HIGH);
-}
-
-// Обновляем показания всех потенциометров
-void dPotUpdate()
-{
-  digitalWrite(D_POT_CS, LOW);
-  
-  for (int i = 0; i < D_POT_COUNT; ++i)
-    sendPotData(dPotValues[i]);
-  
-  digitalWrite(D_POT_CS, HIGH);
+  setAllVolumes(vol, low, high);
 }
 

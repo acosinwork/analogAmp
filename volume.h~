@@ -1,0 +1,8 @@
+#include <Arduino.h>
+
+#define REG_VOL  0
+#define REG_LOW  1
+#define REG_HIGH 2
+
+
+//uint_8t

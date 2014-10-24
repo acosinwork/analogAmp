@@ -1,12 +1,10 @@
 
 // Здесь назначаем пины
 #include "pinMap.h"
-//Здесь работаем с цифровыми потенциометрами
-#include "digiPot.h"
 //Здесь работаем с громкостью
-#include "volume.h"
+#include "digiPot.h"
 
-//struct reg
+struct reg
 
 int a = IR_PIN;
 void setup()
