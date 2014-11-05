@@ -21,12 +21,15 @@ byte dPotValues[D_POT_COUNT];
 // Шлём данные одного потенциометра
 void sendPotData(byte data)
 {
-  digitalWrite(D_POT_SCK, LOW);
 
-  for (int i = 0; i < D_POT_BITS; ++i) 
+  for (int i = 0; i < D_POT_BITS; ++i) {
+    digitalWrite(D_POT_SCK, LOW);
+
     digitalWrite(D_POT_MOSI, bitRead(data, i));
 
-  digitalWrite(D_POT_SCK, HIGH);
+    digitalWrite(D_POT_SCK, HIGH);    
+  }
+
 }
 
 // Обновляем показания всех потенциометров
