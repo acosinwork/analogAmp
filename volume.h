@@ -2,7 +2,6 @@
 #include <inttypes.h>
 
 #include "pinMap.h"
-#include "digiPot.h"
 
 #define REG_VOL  0
 #define REG_LOW  1
