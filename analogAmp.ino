@@ -12,6 +12,7 @@
 
 void setup()
 {
+
 	regulatorsInit();
 	digiPotInit(rVol.value(), rLow.value(), rHigh.value());
 
@@ -19,6 +20,7 @@ void setup()
 
 void loop()
 {
+	// если хоть одна из крутилок изменилась - мы обновим все потенциометры
 	if (regulatorsChanged())
 		setAllVolumes(rVol.value(), rLow.value(), rHigh.value());
 }
