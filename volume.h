@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include <inttypes.h>
 
-#include <pinMap.h>
-
+#include "pinMap.h"
+#include "digiPot.h"
 
 #define REG_VOL  0
 #define REG_LOW  1
@@ -16,43 +16,23 @@ class Regulator {
     void init(int analogInput)
     {
     	_analogInput = analogInput;
-    	_value = map(analogRead(analogInput), 0, 1023, 0, 127);
+    	_value = map(analogRead(_analogInput), 0, 1023, 0, 127);
     }
     
-    void setAInValue(int analogValue)
-    {
-    	_analogValue = analogValue;
-    	_value = map(analogValue, 0, 1023, 0, 127);
-    }
 
-    void setValue(uint8_t value)
-    {
-    	_value = value;
-    }
-
-    uint8_t getValue()
+    uint8_t value()
     {
     	return _value;
     }
 
-    int getAInValue()
+    uint8_t readAInValue()
     {
-    	return _analogValue;
+    	return _value = map(analogRead(_analogInput), 0, 1023, 0, 127);
     }
 
-    int readAInValue()
+    bool analogInChanged()
     {
-    	return analogRead(_analogInput);
-    }
-
-    bool analogInChanged(uint16_t treshold)
-    {
-    	bool result = false;
-    	int aiDiff = abs(_analogValue - analogRead(_analogInput));
-    	if (aiDiff > treshold)
-    		result = true;
-
-    	return result;
+    	return this->value() != this->readAInValue();
     }
   
   private:
@@ -63,31 +43,23 @@ class Regulator {
 };
 
 
-Regulator rVol, rLow, rhigh;
+Regulator rVol, rLow, rHigh;
 
 void regulatorsInit()
 {
 	rVol.init(VOLUME_POT);
 	rLow.init(LOW_POT);
-	rhigh.init(HIGH_POT);
+	rHigh.init(HIGH_POT);
 }
 
-void regulatorsUpdate()
+bool regulatorsChanged()
 {
-	rVol.setAInValue(VOLUME_POT);
-	rLow.setAInValue(LOW_POT);
-	rhigh.setAInValue(HIGH_POT);
+    bool needChange = false;
+
+    needChange |= rVol.analogInChanged();
+    needChange |= rLow.analogInChanged();
+    needChange |= rHigh.analogInChanged();
+
+    return needChange;
 }
 
-// TODO
-bool regulatorsCheckChange(int treshold)
-{
-	bool result = false;
-
-
-	if (rVol.analogInChanged())
-		rVol.setAInValue(rVol.readAInValue());
-
-
-
-}

@@ -12,9 +12,13 @@
 
 void setup()
 {
+	regulatorsInit();
+	digiPotInit(rVol.value(), rLow.value(), rHigh.value());
 
 }
 
 void loop()
 {
+	if (regulatorsChanged())
+		setAllVolumes(rVol.value(), rLow.value(), rHigh.value());
 }
