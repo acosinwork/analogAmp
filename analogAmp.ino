@@ -8,9 +8,11 @@
 
 //struct reg
 
-int a = IR_PIN;
+//int a = IR_PIN;
+
 void setup()
 {
+
 }
 
 void loop()
